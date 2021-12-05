@@ -31,7 +31,8 @@ let keepGoing = true;
 
 import ListImage from './components/ListImage';
 
-let baseURL = 'http://localhost:8080'; // 'http://financelystaging-env.eba-ppbpqmef.us-east-2.elasticbeanstalk.com'
+let baseURL =
+  'http://financelystaging-env.eba-ppbpqmef.us-east-2.elasticbeanstalk.com';
 
 const fetchAllRecipeCards = ({limit = 20, offset = 0}) =>
   axios({
@@ -48,7 +49,7 @@ const fetchAllRecipeCards = ({limit = 20, offset = 0}) =>
 
 // 'https://unsplash.it/400/400?image=1'
 const Item = ({item, onPress, backgroundColor, textColor}) => {
-  let placeholderUrl = `https://unsplash.it/300`; // ?random&rnd${new Date().getTime()}
+  let placeholderUrl = `https://unsplash.it/1080?random`; // ?random&rnd${new Date().getTime()}
   const {images = []} = item;
   return (
     <TouchableOpacity
@@ -62,7 +63,11 @@ const Item = ({item, onPress, backgroundColor, textColor}) => {
       }}
     >
       <ListImage
-        style={{height: '100%', aspectRatio: 1 * 1.4}}
+        style={{
+          height: '100%',
+          aspectRatio: 1 * 1.4,
+          // borderRadius: 9
+        }}
         uri={images?.[0]?.url || placeholderUrl}
         resizeMode={FastImage.resizeMode.cover}
       />
@@ -76,31 +81,28 @@ const {height, width} = Dimensions.get('screen');
 
 const App = ({navigation}) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
-  const [listData, setListData] = useState(null);
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
   const [nextOffset, setNextOffset] = useState(0);
 
   async function fetchData(offset = 0) {
     console.log('keepGoing', keepGoing);
-    if (!keepGoing) return
+    if (!keepGoing) return;
     // get the resources
     let response = await fetchAllRecipeCards({offset: nextOffset});
-    console.log('response?.success', response?.success);
-    console.log('response.data.length', response.data.length);
-    console.log('response.nextOffset', response.nextOffset)
-    console.log('data.length', data.length)
     if (response.success && response.data) {
-      // setData([...response.data]);
       setData([...data, ...response.data]);
       setNextOffset(response.nextOffset);
     } else keepGoing = false;
-  };
+  }
 
   const renderRows = data => {
     // render the flatlist
     if (!data) return;
-    console.log('Rendering to flatlist data.process._stopProfilerIdleNotifier();', data.length);
+    console.log(
+      'Rendering to flatlist data.process._stopProfilerIdleNotifier();',
+      data.length,
+    );
     return data;
   };
 
@@ -114,11 +116,11 @@ const App = ({navigation}) => {
 
   useEffect(() => {
     console.log('nextOffset', nextOffset);
-    console.log('keepGoing', keepGoing)
+    console.log('keepGoing', keepGoing);
     return () => {
       // effect
     };
-  }, [nextOffset, keepGoing])
+  }, [nextOffset, keepGoing]);
 
   console.log('App rendered with count', count);
 
@@ -134,7 +136,7 @@ const App = ({navigation}) => {
         onPress={() => {
           // console.log('item', JSON.stringify(item, null, 2));
           // console.log({index});
-          // setSelectedIndex(index);
+          setSelectedIndex(index);
         }}
         backgroundColor={backgroundColor}
         textColor={color}
@@ -146,7 +148,7 @@ const App = ({navigation}) => {
     <View style={{backgroundColor: 'steelblue', flex: 1}} />
   );
   const renderHeader = () => (
-    <View style={{backgroundColor: 'lightblue', flex: 1, height: 100}}>
+    <View style={{backgroundColor: 'coral', flex: 1}}>
       <Text>{JSON.stringify(data)}</Text>
     </View>
   );
@@ -166,13 +168,13 @@ const App = ({navigation}) => {
         onEndReachedThreshold={0.4}
         data={data}
         renderItem={renderItem}
-        renderEmpty={renderEmpty}
-        renderHeader={renderHeader}
+        // renderEmpty={renderEmpty}
+        // renderHeader={renderHeader}
         // renderFooter={renderFooter}
         itemHeight={180} // Required (default 0)
         headerHeight={180} // Required to show header
         footerHeight={180} // Required to show footer
-        // extraData={selectedIndex}
+        extraData={selectedIndex}
         keyExtractor={item => String(item.id)}
         windowSize={1}
         initialNumToRender={6}
@@ -180,17 +182,6 @@ const App = ({navigation}) => {
       />
     </SafeAreaView>
   );
-
-  // return (
-  //   <SafeAreaView style={styles.container}>
-  //     <FlatList
-  //       data={data}
-  //       renderItem={renderItem}
-  //       keyExtractor={(item, index) => index}
-  //       extraData={selectedIndex}
-  //     />
-  //   </SafeAreaView>
-  // );
 };
 
 const styles = StyleSheet.create({
@@ -203,10 +194,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   item: {
-    padding: 10,
+    // padding: 10,
     marginVertical: 5,
     marginHorizontal: 12,
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
   },
   title: {
     fontSize: 10,

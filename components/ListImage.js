@@ -16,8 +16,8 @@ const ListImage = ({
       source={{
         uri,
         // headers: {Authorization: 'someAuthToken'},
-        priority: FastImage.priority.high,
-        cache: FastImage.cacheControl.immutable,
+        priority: FastImage.priority.normal,
+        cache: FastImage.cacheControl.web,
       }}
       resizeMode={FastImage.resizeMode.contain}
       // onProgress={e => console.log(e.nativeEvent.loaded / e.nativeEvent.total)}
